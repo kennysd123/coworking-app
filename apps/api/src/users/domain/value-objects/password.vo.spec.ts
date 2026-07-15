@@ -26,3 +26,27 @@ describe('Password.validate', () => {
     expect(() => Password.validate('Abcde1f')).toThrow(WeakPasswordException);
   });
 });
+
+describe('Password.hash y Password.compare', () => {
+  it('hash genera un hash distinto al password original', async () => {
+    const raw = 'Segura1!';
+    const hashed = await Password.hash(raw);
+    expect(hashed).not.toBe(raw);
+    expect(typeof hashed).toBe('string');
+    expect(hashed.length).toBeGreaterThan(0);
+  });
+
+  it('compare retorna true cuando el password coincide con el hash', async () => {
+    const raw = 'Segura1!';
+    const hashed = await Password.hash(raw);
+    const result = await Password.compare(raw, hashed);
+    expect(result).toBe(true);
+  });
+
+  it('compare retorna false cuando el password no coincide con el hash', async () => {
+    const raw = 'Segura1!';
+    const hashed = await Password.hash(raw);
+    const result = await Password.compare('OtraPass2!', hashed);
+    expect(result).toBe(false);
+  });
+});

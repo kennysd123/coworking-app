@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { BookingOrmEntity } from './bookings/infrastructure/persistence/booking.orm-entity';
@@ -10,23 +11,39 @@ import { CreateUsersTable1700000001000 } from './users/infrastructure/migrations
 import { AddBookingsUserIndex1700000002000 } from './bookings/infrastructure/migrations/1700000002000-AddBookingsUserIndex';
 import { CreateSalasTable1700000003000 } from './salas/infrastructure/migrations/1700000003000-CreateSalasTable';
 
-export default new DataSource({
-  type: 'postgres',
-  host: process.env.DB_HOST ?? 'localhost',
-  port: Number(process.env.DB_PORT ?? 5433),
-  username: process.env.DB_USER ?? 'coworking',
-  password: process.env.DB_PASSWORD ?? 'coworking',
-  database: process.env.DB_NAME ?? 'coworking_db',
-  entities: [BookingOrmEntity, UserOrmEntity, SalaOrmEntity],
-  migrations: [
-    CreateBookingsTable1700000000000,
-    EnableBtreeGist1700000000001,
-    BookingExclusionConstraint1700000000002,
-    CreateUsersTable1700000001000,
-    AddBookingsUserIndex1700000002000,
-    CreateSalasTable1700000003000,
-  ],
-});
+const _entities = [BookingOrmEntity, UserOrmEntity, SalaOrmEntity];
+const _migrations = [
+  CreateBookingsTable1700000000000,
+  EnableBtreeGist1700000000001,
+  BookingExclusionConstraint1700000000002,
+  CreateUsersTable1700000001000,
+  AddBookingsUserIndex1700000002000,
+  CreateSalasTable1700000003000,
+];
+
+export default new DataSource(
+  process.env.DATABASE_URL
+    ? {
+        type: 'postgres',
+        url: process.env.DATABASE_URL,
+        ssl:
+          process.env.NODE_ENV === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
+        entities: _entities,
+        migrations: _migrations,
+      }
+    : {
+        type: 'postgres',
+        host: process.env.DB_HOST ?? 'localhost',
+        port: Number(process.env.DB_PORT ?? 5433),
+        username: process.env.DB_USER ?? 'coworking',
+        password: process.env.DB_PASSWORD ?? 'coworking',
+        database: process.env.DB_NAME ?? 'coworking_db',
+        entities: _entities,
+        migrations: _migrations,
+      },
+);
 
 
 

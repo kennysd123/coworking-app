@@ -171,4 +171,21 @@ describe('BookingsGateway - eventos', () => {
       gateway.publishBookingCreated({ salaId: 's', inicio: new Date(), fin: new Date() }),
     ).not.toThrow();
   });
+
+  it('publishBookingCancelled no lanza si server aún no está inicializado', () => {
+    (gateway as unknown as { server: unknown }).server = undefined;
+    expect(() =>
+      gateway.publishBookingCancelled({ salaId: 's', bookingId: 'b' }),
+    ).not.toThrow();
+  });
+
+  it('unsubscribe-sala hace leave del room indicado', () => {
+    const mockClient = {
+      leave: jest.fn(),
+    } as unknown as import('socket.io').Socket;
+
+    gateway.handleUnsubscribeSala(mockClient, { salaId: 'sala-abc' });
+
+    expect(mockClient.leave).toHaveBeenCalledWith('sala-abc');
+  });
 });

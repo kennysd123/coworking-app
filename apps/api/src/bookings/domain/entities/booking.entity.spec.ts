@@ -43,3 +43,30 @@ describe('Booking.overlaps', () => {
     expect(Booking.overlaps(a, b)).toBe(false);
   });
 });
+
+describe('Booking.reconstitute', () => {
+  it('reconstituye una reserva con estado cancelada', () => {
+    const booking = Booking.reconstitute({
+      id: 'b1',
+      salaId: 'sala-a',
+      usuarioId: 'u1',
+      inicio: new Date('2024-01-01T10:00Z'),
+      fin: new Date('2024-01-01T12:00Z'),
+      estado: 'cancelada',
+    });
+    expect(booking.estado).toBe('cancelada');
+    expect(booking.id).toBe('b1');
+  });
+
+  it('reconstituye una reserva con estado activa', () => {
+    const booking = Booking.reconstitute({
+      id: 'b2',
+      salaId: 'sala-b',
+      usuarioId: 'u2',
+      inicio: new Date('2024-01-02T09:00Z'),
+      fin: new Date('2024-01-02T11:00Z'),
+      estado: 'activa',
+    });
+    expect(booking.estado).toBe('activa');
+  });
+});

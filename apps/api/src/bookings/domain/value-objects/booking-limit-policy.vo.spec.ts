@@ -33,4 +33,9 @@ describe('BookingLimitPolicy.for()', () => {
     expect(premium.maxDurationHours).toBeGreaterThan(regular.maxDurationHours);
     expect(premium.maxAdvanceDays).toBeGreaterThan(regular.maxAdvanceDays);
   });
+
+  it('retorna los límites de regular como fallback para un rol desconocido', () => {
+    const limits = BookingLimitPolicy.for('unknown' as unknown as import('../../../users/domain/entities/user.entity').UserRole);
+    expect(limits).toEqual(BookingLimitPolicy.for('regular'));
+  });
 });
