@@ -1,0 +1,25 @@
+schema: spec-driven
+context: |
+  Proyecto: Sistema de Coworking (reserva de salas de reuniones)
+  Backend: NestJS + TypeORM + arquitectura hexagonal (domain/application/infrastructure)
+  BD: PostgreSQL 16
+  Frontend: Next.js (App Router), panel admin y panel cliente separados
+  Auth: JWT + roles (admin, regular, premium)
+  Testing: Jest (unitarias), Testcontainers + Supertest (integración)
+  Infra: Docker Compose, CI en GitHub Actions
+
+  Reglas de arquitectura:
+  - domain/ nunca importa de infrastructure/
+  - Reglas de negocio críticas (anti-overbooking, límites transaccionales) se validan en el dominio, no solo en la BD
+  - DTOs validados con class-validator
+  - Casos de uso: <Accion><Entidad>UseCase (ej. CreateBookingUseCase)
+rules:
+  proposal:
+    - Mencionar impacto en RF/RNF relacionados
+  specs:
+    - Usar escenarios en formato Given/When/Then o EARS
+  design:
+    - Especificar diagrama de arquitectura hexagonal afectado
+    - Especificar modelo de datos si aplica
+  tasks:
+    - Cada tarea debe incluir su test correspondiente (unitario o integración)

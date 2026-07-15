@@ -1,0 +1,31 @@
+# docker-compose.yml
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: coworking
+      POSTGRES_PASSWORD: coworking
+      POSTGRES_DB: coworking_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coworking"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres_test:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: coworking
+      POSTGRES_PASSWORD: coworking
+      POSTGRES_DB: coworking_test_db
+    ports:
+      - "5433:5432"
+
+volumes:
+  pgdata:
